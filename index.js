@@ -48,7 +48,7 @@ platformCollisions2D.forEach((row, y) => {
                     x: x * 16, 
                     y: y * 16,
                 },
-                height: 4,
+                height: 10,
             })
             )
         }
@@ -111,11 +111,17 @@ const player = new Player({
     }
 });
 
+let isGrounded = false;
+let jumps = 0;
+
 const keys = {
     d: {
         pressed: false,
     },
     a: {
+        pressed: false,
+    },
+    s: {
         pressed: false,
     },
 }
@@ -202,7 +208,14 @@ window.addEventListener('keydown', (event) => {
             keys.a.pressed = true;
             break;
         case 'w':
+            if(jumps < 2){
+            isGrounded = false;
+            jumps++;
             player.velocity.y = -5;
+            }
+            break;
+        case 's':
+            keys.s.pressed = true;
             break;
     }
 })
@@ -214,6 +227,9 @@ window.addEventListener('keyup', (event) => {
             break;
         case 'a':
             keys.a.pressed = false;
+            break;
+        case 's':
+            keys.s.pressed = false;
             break;
     }
 })
