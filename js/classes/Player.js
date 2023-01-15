@@ -245,7 +245,7 @@ class Player extends Sprite {
         ) {
             if (this.velocity.y > 0) {
                 
-                if(!keys.s.pressed){
+                if(!keys.down.pressed){
                 isGrounded = true;
                 this.velocity.y = 0;
                 const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;

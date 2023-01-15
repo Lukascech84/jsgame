@@ -9,6 +9,14 @@ const scaledCanvas = {
     height: canvas.height / 4 
 }
 
+
+const left = 'a';
+const right = 'd';
+const down = 's';
+const up = 'w';
+const mapa = 'm';
+
+
 const fps = 1000;
 
 const floorCollisions2D = []
@@ -114,16 +122,16 @@ let isGrounded = false;
 let jumps = 0;
 
 const keys = {
-    d: {
+    right: {
         pressed: false,
     },
-    a: {
+    left: {
         pressed: false,
     },
-    s: {
+    down: {
         pressed: false,
     },
-    m: {
+    mapa: {
         pressed: false,
     },
 
@@ -186,13 +194,13 @@ function animate() {
     player.update();
 
     player.velocity.x = 0;
-    if (keys.d.pressed) {
+    if (keys.right.pressed) {
         player.switchSprite('Run');
         player.velocity.x = 2;
         player.lastDirection = 'right';
         player.shouldPanCameraToTheLeft({canvas, camera});
     }
-    else if (keys.a.pressed){ 
+    else if (keys.left.pressed){ 
         player.switchSprite('RunLeft');
         player.velocity.x = -2;
         player.lastDirection = 'left';
@@ -220,7 +228,7 @@ function animate() {
             if(player.lastDirection === 'right') player.switchSprite('Fall');
             else player.switchSprite('FallLeft');
         }
-        if(keys.m.pressed) {
+        if(keys.mapa.pressed) {
             minimap.update();
             minimapCharacter.update();
         }
@@ -232,16 +240,16 @@ animate();
 
 window.addEventListener('keydown', (event) => {
     switch (event.key) {
-        case 'd':
-            if(keys.m.pressed) return
-            keys.d.pressed = true;
+        case right:
+            if(keys.mapa.pressed) return
+            keys.right.pressed = true;
             break;
-        case 'a':
-            if(keys.m.pressed) return
-            keys.a.pressed = true;
+        case left:
+            if(keys.mapa.pressed) return
+            keys.left.pressed = true;
             break;
-        case 'w':
-            if(keys.m.pressed) return
+        case up:
+            if(keys.mapa.pressed) return
             if(jumps < 2){
             isGrounded = false;
             jumps++;
@@ -249,27 +257,27 @@ window.addEventListener('keydown', (event) => {
             player.velocity.y = -5;
             }
             break;
-        case 's':
-            if(keys.m.pressed) return
-            keys.s.pressed = true;
+        case down:
+            if(keys.mapa.pressed) return
+            keys.down.pressed = true;
             break;
-        case 'm':
-            if(keys.a.pressed || keys.s.pressed || keys.d.pressed || player.velocity.y != 0) return
-            keys.m.pressed = !keys.m.pressed;
+        case mapa:
+            if(keys.left.pressed || keys.down.pressed || keys.right.pressed || player.velocity.y != 0) return
+            keys.mapa.pressed = !keys.mapa.pressed;
             break;
     }
 })
 
 window.addEventListener('keyup', (event) => {
     switch (event.key) {
-        case 'd':
-            keys.d.pressed = false;
+        case right:
+            keys.right.pressed = false;
             break;
-        case 'a':
-            keys.a.pressed = false;
+        case left:
+            keys.left.pressed = false;
             break;
-        case 's':
-            keys.s.pressed = false;
+        case down:
+            keys.down.pressed = false;
             break;
     }
 })
