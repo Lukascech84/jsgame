@@ -6,7 +6,7 @@ canvas.height = 576;
 
 const scaledCanvas = {
     width: canvas.width / 4,
-    height: canvas.height / 4
+    height: canvas.height / 4 
 }
 
 const fps = 1000;
@@ -55,7 +55,6 @@ platformCollisions2D.forEach((row, y) => {
     })
 })
 
-
 const gravity = 0.2;
 
 const player = new Player({
@@ -73,13 +72,28 @@ const player = new Player({
             frameRate: 8,
             frameBuffer: 8,
         },
+        IdleLeft: {
+            imageSrc: './img/warrior/IdleLeft.png',
+            frameRate: 8,
+            frameBuffer: 8,
+        },
         Run: {
             imageSrc: './img/warrior/Run.png',
             frameRate: 8,
             frameBuffer: 6,
         },
+        RunLeft: {
+            imageSrc: './img/warrior/RunLeft.png',
+            frameRate: 8,
+            frameBuffer: 6,
+        },
         Jump: {
             imageSrc: './img/warrior/Jump.png',
+            frameRate: 2,
+            frameBuffer: 10,
+        },
+        JumpLeft: {
+            imageSrc: './img/warrior/JumpLeft.png',
             frameRate: 2,
             frameBuffer: 10,
         },
@@ -92,22 +106,7 @@ const player = new Player({
             imageSrc: './img/warrior/FallLeft.png',
             frameRate: 2,
             frameBuffer: 10,
-        },
-        RunLeft: {
-            imageSrc: './img/warrior/RunLeft.png',
-            frameRate: 8,
-            frameBuffer: 6,
-        },
-        IdleLeft: {
-            imageSrc: './img/warrior/IdleLeft.png',
-            frameRate: 8,
-            frameBuffer: 8,
-        },
-        JumpLeft: {
-            imageSrc: './img/warrior/JumpLeft.png',
-            frameRate: 2,
-            frameBuffer: 10,
-        },
+        },  
     }
 });
 
@@ -124,7 +123,28 @@ const keys = {
     s: {
         pressed: false,
     },
+    m: {
+        pressed: false,
+    },
+
 }
+
+const minimap = new Sprite({
+    position:{
+        x: player.position.x,
+        y: player.position.y,
+    },
+    imageSrc: './img/minimap.png',
+})
+
+const minimapCharacter = new Sprite({
+    position: {
+        x: player.position.x - 14,
+        y: player.position.y + 98.5,
+    },
+    imageSrc: './img/minimapCharacter.png',
+    scale: 0.25,
+})
 
 const background = new Sprite({
     position:{
@@ -153,7 +173,8 @@ function animate() {
     c.save();
     c.scale(4, 4);
     c.translate(camera.position.x, camera.position.y)
-    background.update();
+    background.update();   
+
     collisionBlocks.forEach(CollisionBlock => {
         CollisionBlock.update();
     })
@@ -177,6 +198,7 @@ function animate() {
         player.lastDirection = 'left';
         player.shouldPanCameraToTheRight({canvas, camera});
     }
+
     else if (player.velocity.y === 0 ){
         if(player.lastDirection === 'right') player.switchSprite('Idle');
         else player.switchSprite('IdleLeft')
@@ -185,13 +207,22 @@ function animate() {
 
     if(player.velocity.y < 0) {
         player.shouldPanCameraToTheDown({canvas, camera});
-        if(player.lastDirection === 'right') player.switchSprite('Jump');
-        else player.switchSprite('JumpLeft')
+        if(player.lastDirection === 'right') 
+        {        
+            player.switchSprite('Jump');
+        }
+        else {
+            player.switchSprite('JumpLeft');
     }
+}
         else if (player.velocity.y > 0) {
             player.shouldPanCameraToTheUp({canvas, camera});
             if(player.lastDirection === 'right') player.switchSprite('Fall');
             else player.switchSprite('FallLeft');
+        }
+        if(keys.m.pressed) {
+            minimap.update();
+            minimapCharacter.update();
         }
     c.restore();
 
@@ -202,20 +233,29 @@ animate();
 window.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'd':
+            if(keys.m.pressed) return
             keys.d.pressed = true;
             break;
         case 'a':
+            if(keys.m.pressed) return
             keys.a.pressed = true;
             break;
         case 'w':
+            if(keys.m.pressed) return
             if(jumps < 2){
             isGrounded = false;
             jumps++;
+
             player.velocity.y = -5;
             }
             break;
         case 's':
+            if(keys.m.pressed) return
             keys.s.pressed = true;
+            break;
+        case 'm':
+            if(keys.a.pressed || keys.s.pressed || keys.d.pressed || player.velocity.y != 0) return
+            keys.m.pressed = !keys.m.pressed;
             break;
     }
 })

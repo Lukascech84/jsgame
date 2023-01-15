@@ -111,7 +111,25 @@ class Player extends Sprite {
         }
     }
 
+    numberOfJumps(){
+        c.fillStyle = 'rgba(255, 255, 255, 1)';
+        c.fillText(Math.abs(jumps-2),Math.abs(camera.position.x) + 230,Math.abs(camera.position.y) + 20);
+    }
+
+    minimapMovement(){
+        minimap.position.x = Math.abs(camera.position.x) - 162;
+        minimap.position.y = Math.abs(camera.position.y) - 145;
+    }
+
+    minimapCharacterMovement(){
+        minimapCharacter.position.x = player.hitbox.position.x/4 + 52 + Math.abs(camera.position.x);
+        minimapCharacter.position.y = player.hitbox.position.y/4 + 17 + Math.abs(camera.position.y);
+    }
+
     update() {
+        this.minimapCharacterMovement();
+        this.minimapMovement();
+        this.numberOfJumps();
         this.jumpResseting();
         this.updateFrames();
         this.updateHitbox();
