@@ -15,6 +15,7 @@ const right = 'd';
 const down = 's';
 const up = 'w';
 const mapa = 'm';
+const use = 'e';
 
 
 const fps = 1000;
@@ -115,8 +116,46 @@ const player = new Player({
             frameRate: 2,
             frameBuffer: 10,
         },  
+        EnteringDoors: {
+            imageSrc: './img/warrior/EnteringDoors.png',
+            frameRate: 8,
+            frameBuffer: 8,
+            loop: false,
+        }, 
     }
 });
+
+const doors = [
+    new Sprite({
+        position:{
+            x:150,
+            y:372
+        },
+        imageSrc: './img/doorOpen.png', 
+        frameRate: 5,
+        frameBuffer: 2,
+        scale: 0.25,
+        loop: false,
+        autoplay: false,
+        /*
+        animations: {
+            DoorOpen: {
+                imageSrc: './img/doorOpen.png',
+                frameRate: 5,
+                frameBuffer: 2,
+                loop: false,
+            }, 
+            DoorHighlight: {
+                imageSrc: './img/doorHighlight.png',
+                frameRate: 2,
+                frameBuffer: 1,
+                loop: false,
+                autoplay: false,
+            }, 
+        }
+        */
+    })
+]
 
 let isGrounded = false;
 let jumps = 0;
@@ -132,6 +171,9 @@ const keys = {
         pressed: false,
     },
     mapa: {
+        pressed: false,
+    },
+    use: {
         pressed: false,
     },
 
@@ -180,8 +222,28 @@ function animate() {
 
     c.save();
     c.scale(4, 4);
-    c.translate(camera.position.x, camera.position.y)
-    background.update();   
+    c.translate(camera.position.x, camera.position.y);
+
+    background.update(); 
+
+    doors.forEach((door) => {
+        door.draw();
+    })
+
+/*
+
+        if(collision({
+            object1: player.hitbox,
+            object2: doors[0]
+        })){
+            console.log("Highlight");
+            doors[0].switchSprite('DoorHighlight');
+            return;
+        } else {
+            doors[0].switchSprite('DoorOpen');
+        }
+
+*/
 
     collisionBlocks.forEach(CollisionBlock => {
         CollisionBlock.update();
@@ -193,25 +255,7 @@ function animate() {
     player.checkForHorizontalCanvasCollision();
     player.update();
 
-    player.velocity.x = 0;
-    if (keys.right.pressed) {
-        player.switchSprite('Run');
-        player.velocity.x = 2;
-        player.lastDirection = 'right';
-        player.shouldPanCameraToTheLeft({canvas, camera});
-    }
-    else if (keys.left.pressed){ 
-        player.switchSprite('RunLeft');
-        player.velocity.x = -2;
-        player.lastDirection = 'left';
-        player.shouldPanCameraToTheRight({canvas, camera});
-    }
-
-    else if (player.velocity.y === 0 ){
-        if(player.lastDirection === 'right') player.switchSprite('Idle');
-        else player.switchSprite('IdleLeft')
-        
-    }
+    player.handleInput(keys);
 
     if(player.velocity.y < 0) {
         player.shouldPanCameraToTheDown({canvas, camera});
@@ -239,6 +283,7 @@ function animate() {
 animate();
 
 window.addEventListener('keydown', (event) => {
+    if(player.preventInput) return
     switch (event.key) {
         case right:
             if(keys.mapa.pressed) return
@@ -265,6 +310,22 @@ window.addEventListener('keydown', (event) => {
             if(keys.left.pressed || keys.down.pressed || keys.right.pressed || player.velocity.y != 0) return
             keys.mapa.pressed = !keys.mapa.pressed;
             break;
+        case use:
+            for(let i = 0; i < doors.length; i++){
+                const door = doors[i];
+
+                if(collision({
+                    object1: player.hitbox,
+                    object2: door
+                })){
+                    player.velocity.x = 0;
+                    player.velocity.y = 0;
+                    player.preventInput = true;
+                    player.switchSprite('EnteringDoors');
+                    door.play();
+                    return
+                }
+            }
     }
 })
 

@@ -6,7 +6,8 @@ class Player extends Sprite {
         imageSrc, 
         frameRate,
         scale = 0.5,
-        animations
+        animations,
+        loop
     }) {
         super({imageSrc, frameRate, scale});
         this.position = position;
@@ -51,7 +52,8 @@ class Player extends Sprite {
         this.currentFrame = 0;
         this.image = this.animations[key].image;
         this.frameBuffer = this.animations[key].frameBuffer;
-        this.frameRate = this.animations[key].frameRate;   
+        this.frameRate = this.animations[key].frameRate;  
+        this.loop = this.animations[key].loop;
     }
 
     updateCamerabox(){
@@ -126,6 +128,28 @@ class Player extends Sprite {
         minimapCharacter.position.y = player.hitbox.position.y/4 + 17 + Math.abs(camera.position.y);
     }
 
+    handleInput(keys){
+        if (this.preventInput) return
+        this.velocity.x = 0;
+        if (keys.right.pressed) {
+            this.switchSprite('Run');
+            this.velocity.x = 2;
+            this.lastDirection = 'right';
+            this.shouldPanCameraToTheLeft({canvas, camera});
+        }
+        else if (keys.left.pressed){ 
+            this.switchSprite('RunLeft');
+            this.velocity.x = -2;
+            this.lastDirection = 'left';
+            this.shouldPanCameraToTheRight({canvas, camera});
+        }
+    
+        else if (this.velocity.y === 0 ){
+            if(this.lastDirection === 'right') this.switchSprite('Idle');
+            else this.switchSprite('IdleLeft')
+        }
+    }
+
     update() {
         this.minimapCharacterMovement();
         this.minimapMovement();
@@ -136,12 +160,13 @@ class Player extends Sprite {
         this.updateCamerabox();
 
 /*
+        //Camerabox
         c.fillStyle = 'rgba(0, 0, 255, 0.25)';
         c.fillRect(this.camerabox.position.x,this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
-
+        //Celý hráč
         c.fillStyle = 'rgba(0, 255, 0, 0.25)';
         c.fillRect(this.position.x,this.position.y, this.width, this.height);
-
+        //Hitbox
         c.fillStyle = 'rgba(255, 0, 0, 0.25)';
         c.fillRect(this.hitbox.position.x,this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 */
