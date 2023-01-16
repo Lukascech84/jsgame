@@ -75,51 +75,60 @@ const player = new Player({
     platformCollisionBlocks,
     imageSrc: './img/warrior/Idle.png',
     frameRate: 8,
+    loop: true,
     animations: {
         Idle: {
             imageSrc: './img/warrior/Idle.png',
             frameRate: 8,
-            frameBuffer: 8,
+            frameBuffer: 16,
+            loop: true,
         },
         IdleLeft: {
             imageSrc: './img/warrior/IdleLeft.png',
             frameRate: 8,
-            frameBuffer: 8,
+            frameBuffer: 16,
+            loop: true,
         },
         Run: {
             imageSrc: './img/warrior/Run.png',
             frameRate: 8,
-            frameBuffer: 6,
+            frameBuffer: 9,
+            loop: true,
         },
         RunLeft: {
             imageSrc: './img/warrior/RunLeft.png',
             frameRate: 8,
-            frameBuffer: 6,
+            frameBuffer: 9,
+            loop: true,
         },
         Jump: {
             imageSrc: './img/warrior/Jump.png',
             frameRate: 2,
             frameBuffer: 10,
+            loop: true,
         },
         JumpLeft: {
             imageSrc: './img/warrior/JumpLeft.png',
             frameRate: 2,
             frameBuffer: 10,
+            loop: true,
         },
         Fall: {
             imageSrc: './img/warrior/Fall.png',
             frameRate: 2,
             frameBuffer: 10,
+            loop: true,
         },
         FallLeft: {
             imageSrc: './img/warrior/FallLeft.png',
             frameRate: 2,
             frameBuffer: 10,
+            loop: true,
         },  
         EnteringDoors: {
             imageSrc: './img/warrior/EnteringDoors.png',
             frameRate: 8,
-            frameBuffer: 8,
+            frameBuffer: 10,
             loop: false,
         }, 
     }
@@ -285,39 +294,45 @@ animate();
 window.addEventListener('keydown', (event) => {
     if(player.preventInput) return
     switch (event.key) {
+
         case right:
             if(keys.mapa.pressed) return
             keys.right.pressed = true;
             break;
+
         case left:
             if(keys.mapa.pressed) return
             keys.left.pressed = true;
             break;
+
         case up:
             if(keys.mapa.pressed) return
             if(jumps < 2){
             isGrounded = false;
             jumps++;
-
             player.velocity.y = -5;
             }
             break;
+
         case down:
             if(keys.mapa.pressed) return
             keys.down.pressed = true;
             break;
+
         case mapa:
             if(keys.left.pressed || keys.down.pressed || keys.right.pressed || player.velocity.y != 0) return
             keys.mapa.pressed = !keys.mapa.pressed;
             break;
+
         case use:
             for(let i = 0; i < doors.length; i++){
                 const door = doors[i];
-
-                if(collision({
-                    object1: player.hitbox,
-                    object2: door
-                })){
+                
+            if(
+                doorCollision({
+                object1: player.hitbox,
+                object2: door,
+            })){
                     player.velocity.x = 0;
                     player.velocity.y = 0;
                     player.preventInput = true;
@@ -331,12 +346,15 @@ window.addEventListener('keydown', (event) => {
 
 window.addEventListener('keyup', (event) => {
     switch (event.key) {
+
         case right:
             keys.right.pressed = false;
             break;
+
         case left:
             keys.left.pressed = false;
             break;
+
         case down:
             keys.down.pressed = false;
             break;
