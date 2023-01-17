@@ -4,134 +4,15 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
+
 let floorCollisionsVar = floorCollisionsL1;
 let platformCollisionsVar = platformCollisionsL1;
+
+
 let background;
 let doors;
 let goToLevel;
 
-let level = 1;
-let levels = {
-    1: {
-        init: () => {
-
-            floorCollisionsVar = floorCollisionsL1;
-            platformCollisionsVar = platformCollisionsL1;
-            if(player.currentAnimation) player.currentAnimation.isActive = false;
-            player.position.x = 120;
-            player.position.y = 350;
-            goToLevel = 2;
-            
-
-            background = new Sprite({
-                position: {
-                    x: 0,
-                    y: 0,
-                },
-                imageSrc: './img/backgroundL1.png',
-            })
-
-            doors = [
-                new Sprite({
-                    position: {
-                        x: 150,
-                        y: 372
-                    },
-                    imageSrc: './img/doorOpen.png',
-                    frameRate: 5,
-                    frameBuffer: 2,
-                    scale: 0.25,
-                    loop: false,
-                    autoplay: false,
-                    /*
-                    animations: {
-                        DoorOpen: {
-                            imageSrc: './img/doorOpen.png',
-                            frameRate: 5,
-                            frameBuffer: 2,
-                            loop: false,
-                        }, 
-                        DoorHighlight: {
-                            imageSrc: './img/doorHighlight.png',
-                            frameRate: 2,
-                            frameBuffer: 1,
-                            loop: false,
-                            autoplay: false,
-                        }, 
-                    }
-                    */
-                })
-            ]
-        }
-    },
-    2: {
-        init: () => {
-
-            floorCollisionsVar = floorCollisionsL1;
-            platformCollisionsVar = platformCollisionsL1;
-            if(player.currentAnimation) player.currentAnimation.isActive = false;
-            player.position.x = 170;
-            player.position.y = 350;
-            goToLevel = 1;
-
-            background = new Sprite({
-                position: {
-                    x: 0,
-                    y: 0,
-                },
-                imageSrc: './img/backgroundL2.png',
-            })
-
-            doors = [
-                new Sprite({
-                    position: {
-                        x: 200,
-                        y: 372
-                    },
-                    imageSrc: './img/doorOpen.png',
-                    frameRate: 5,
-                    frameBuffer: 2,
-                    scale: 0.25,
-                    loop: false,
-                    autoplay: false,
-                    /*
-                    animations: {
-                        DoorOpen: {
-                            imageSrc: './img/doorOpen.png',
-                            frameRate: 5,
-                            frameBuffer: 2,
-                            loop: false,
-                        }, 
-                        DoorHighlight: {
-                            imageSrc: './img/doorHighlight.png',
-                            frameRate: 2,
-                            frameBuffer: 1,
-                            loop: false,
-                            autoplay: false,
-                        }, 
-                    }
-                    */
-                })
-            ]
-        }
-    }
-}
-
-const scaledCanvas = {
-    width: canvas.width / 4,
-    height: canvas.height / 4
-}
-
-
-const left = 'a';
-const right = 'd';
-const down = 's';
-const up = 'w';
-const mapa = 'm';
-const use = 'e';
-
-
-const fps = 1000;
 
 const floorCollisions2D = []
 for (let i = 0; i < floorCollisionsVar.length; i += 36) {
@@ -176,15 +57,12 @@ platformCollisions2D.forEach((row, y) => {
     })
 })
 
-const gravity = 0.2;
 
 const player = new Player({
     position: {
         x: 100,
         y: 300,
     },
-    collisionBlocks,
-    platformCollisionBlocks,
     imageSrc: './img/warrior/Idle.png',
     frameRate: 8,
     loop: true,
@@ -260,6 +138,138 @@ const player = new Player({
         },
     }
 });
+
+
+
+let level = 1;
+let levels = {
+    1: {
+        init: () => {
+            floorCollisionsVar = floorCollisionsL1;
+            platformCollisionsVar = platformCollisionsL1;
+            player.collisionBlocks = collisionBlocks;
+            player.platformCollisionBlocks = platformCollisionBlocks;
+            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            player.position.x = 120;
+            player.position.y = 350;
+            goToLevel = 2;
+            
+
+            background = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/backgroundL1.png',
+            })
+
+            doors = [
+                new Sprite({
+                    position: {
+                        x: 150,
+                        y: 372
+                    },
+                    imageSrc: './img/doorOpen.png',
+                    frameRate: 5,
+                    frameBuffer: 2,
+                    scale: 0.25,
+                    loop: false,
+                    autoplay: false,
+                    /*
+                    animations: {
+                        DoorOpen: {
+                            imageSrc: './img/doorOpen.png',
+                            frameRate: 5,
+                            frameBuffer: 2,
+                            loop: false,
+                        }, 
+                        DoorHighlight: {
+                            imageSrc: './img/doorHighlight.png',
+                            frameRate: 2,
+                            frameBuffer: 1,
+                            loop: false,
+                            autoplay: false,
+                        }, 
+                    }
+                    */
+                })
+            ]
+        }
+    },
+    2: {
+        init: () => {
+            floorCollisionsVar = floorCollisionsL2;
+            platformCollisionsVar = platformCollisionsL2;
+            player.collisionBlocks = collisionBlocks;
+            player.platformCollisionBlocks = platformCollisionBlocks;
+            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            player.position.x = 170;
+            player.position.y = 350;
+            goToLevel = 1;
+
+            background = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/backgroundL2.png',
+            })
+
+            doors = [
+                new Sprite({
+                    position: {
+                        x: 200,
+                        y: 372
+                    },
+                    imageSrc: './img/doorOpen.png',
+                    frameRate: 5,
+                    frameBuffer: 2,
+                    scale: 0.25,
+                    loop: false,
+                    autoplay: false,
+                    /*
+                    animations: {
+                        DoorOpen: {
+                            imageSrc: './img/doorOpen.png',
+                            frameRate: 5,
+                            frameBuffer: 2,
+                            loop: false,
+                        }, 
+                        DoorHighlight: {
+                            imageSrc: './img/doorHighlight.png',
+                            frameRate: 2,
+                            frameBuffer: 1,
+                            loop: false,
+                            autoplay: false,
+                        }, 
+                    }
+                    */
+                })
+            ]
+        }
+    }
+}
+
+const scaledCanvas = {
+    width: canvas.width / 4,
+    height: canvas.height / 4
+}
+
+
+const left = 'a';
+const right = 'd';
+const down = 's';
+const up = 'w';
+const mapa = 'm';
+const use = 'e';
+
+
+const fps = 1000;
+
+
+const gravity = 0.2;
+
+
 
 let isGrounded = false;
 let jumps = 0;
