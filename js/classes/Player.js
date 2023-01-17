@@ -164,13 +164,26 @@ class Player extends Sprite {
                 canvas,
                 camera
             });
-        } else if (this.velocity.y === 0) {
+        } else {
             if (this.lastDirection === 'right') this.switchSprite('Idle');
             else this.switchSprite('IdleLeft')
         }
     }
 
+    attack(){
+        if(isAttacking && (keys.right.pressed || keys.left.pressed) && this.velocity.y === 0){
+            console.log("log");
+            this.velocity.x = 0;
+            if(this.lastDirection === 'right') this.switchSprite('Attack1');
+            else this.switchSprite('Attack1Left');
+            this.preventInput = true;
+            return;
+        }
+    }
+
+
     update() {
+        this.attack();
         this.minimapCharacterMovement();
         this.minimapMovement();
         this.numberOfJumps();
@@ -178,7 +191,6 @@ class Player extends Sprite {
         this.updateFrames();
         this.updateHitbox();
         this.updateCamerabox();
-
         /*
                 //Camerabox
                 c.fillStyle = 'rgba(0, 0, 255, 0.25)';

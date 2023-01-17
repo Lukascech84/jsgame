@@ -136,6 +136,30 @@ const player = new Player({
                 return;
             },
         },
+        Attack1: {
+            imageSrc: './img/warrior/Attack1.png',
+            frameRate: 4,
+            frameBuffer: 20,
+            loop: false,
+            onComplete: () => {
+                player.preventInput = false;
+                player.switchSprite('Idle');
+                isAttacking = false;
+                player.velocity.x = 2;
+            }
+        },
+        Attack1Left: {
+            imageSrc: './img/warrior/Attack1Left.png',
+            frameRate: 4,
+            frameBuffer: 20,
+            loop: false,
+            onComplete: () => {
+                player.preventInput = false;
+                player.switchSprite('Idle');
+                isAttacking = false;
+                player.velocity.x = 2;
+            }
+        },
     }
 });
 
@@ -149,11 +173,11 @@ let levels = {
             platformCollisionsVar = platformCollisionsL1;
             player.collisionBlocks = collisionBlocks;
             player.platformCollisionBlocks = platformCollisionBlocks;
-            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            if (player.currentAnimation) player.currentAnimation.isActive = false;
             player.position.x = 120;
             player.position.y = 350;
             goToLevel = 2;
-            
+
 
             background = new Sprite({
                 position: {
@@ -202,7 +226,7 @@ let levels = {
             platformCollisionsVar = platformCollisionsL2;
             player.collisionBlocks = collisionBlocks;
             player.platformCollisionBlocks = platformCollisionBlocks;
-            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            if (player.currentAnimation) player.currentAnimation.isActive = false;
             player.position.x = 170;
             player.position.y = 350;
             goToLevel = 1;
@@ -272,6 +296,7 @@ const gravity = 0.2;
 
 
 let isGrounded = false;
+let isAttacking = false;
 let jumps = 0;
 
 const keys = {
@@ -290,7 +315,6 @@ const keys = {
     use: {
         pressed: false,
     },
-
 }
 
 const minimap = new Sprite({
@@ -441,7 +465,7 @@ window.addEventListener('keydown', (event) => {
                     doorCollision({
                         object1: player.hitbox,
                         object2: door,
-                    })) {
+                    }) && player.velocity.y === 0) {
                     player.velocity.x = 0;
                     player.velocity.y = 0;
                     player.preventInput = true;
@@ -450,6 +474,7 @@ window.addEventListener('keydown', (event) => {
                     return
                 }
             }
+            break;
     }
 })
 
@@ -467,5 +492,17 @@ window.addEventListener('keyup', (event) => {
         case down:
             keys.down.pressed = false;
             break;
+    }
+
+
+})
+
+window.addEventListener('mousedown', (event) => {
+    if(player.preventInput) return
+    if(player.velocity.y === 0){
+        player.preventInput = true;
+        if(player.lastDirection === 'right') player.switchSprite('Attack1');
+        else player.switchSprite('Attack1Left');
+        isAttacking = true;
     }
 })
