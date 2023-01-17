@@ -4,9 +4,122 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
+let floorCollisionsVar = floorCollisionsL1;
+let platformCollisionsVar = platformCollisionsL1;
+let background;
+let doors;
+let goToLevel;
+
+let level = 1;
+let levels = {
+    1: {
+        init: () => {
+
+            floorCollisionsVar = floorCollisionsL1;
+            platformCollisionsVar = platformCollisionsL1;
+            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            player.position.x = 120;
+            player.position.y = 350;
+            goToLevel = 2;
+            
+
+            background = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/backgroundL1.png',
+            })
+
+            doors = [
+                new Sprite({
+                    position: {
+                        x: 150,
+                        y: 372
+                    },
+                    imageSrc: './img/doorOpen.png',
+                    frameRate: 5,
+                    frameBuffer: 2,
+                    scale: 0.25,
+                    loop: false,
+                    autoplay: false,
+                    /*
+                    animations: {
+                        DoorOpen: {
+                            imageSrc: './img/doorOpen.png',
+                            frameRate: 5,
+                            frameBuffer: 2,
+                            loop: false,
+                        }, 
+                        DoorHighlight: {
+                            imageSrc: './img/doorHighlight.png',
+                            frameRate: 2,
+                            frameBuffer: 1,
+                            loop: false,
+                            autoplay: false,
+                        }, 
+                    }
+                    */
+                })
+            ]
+        }
+    },
+    2: {
+        init: () => {
+
+            floorCollisionsVar = floorCollisionsL1;
+            platformCollisionsVar = platformCollisionsL1;
+            if(player.currentAnimation) player.currentAnimation.isActive = false;
+            player.position.x = 170;
+            player.position.y = 350;
+            goToLevel = 1;
+
+            background = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/backgroundL2.png',
+            })
+
+            doors = [
+                new Sprite({
+                    position: {
+                        x: 200,
+                        y: 372
+                    },
+                    imageSrc: './img/doorOpen.png',
+                    frameRate: 5,
+                    frameBuffer: 2,
+                    scale: 0.25,
+                    loop: false,
+                    autoplay: false,
+                    /*
+                    animations: {
+                        DoorOpen: {
+                            imageSrc: './img/doorOpen.png',
+                            frameRate: 5,
+                            frameBuffer: 2,
+                            loop: false,
+                        }, 
+                        DoorHighlight: {
+                            imageSrc: './img/doorHighlight.png',
+                            frameRate: 2,
+                            frameBuffer: 1,
+                            loop: false,
+                            autoplay: false,
+                        }, 
+                    }
+                    */
+                })
+            ]
+        }
+    }
+}
+
 const scaledCanvas = {
     width: canvas.width / 4,
-    height: canvas.height / 4 
+    height: canvas.height / 4
 }
 
 
@@ -21,44 +134,43 @@ const use = 'e';
 const fps = 1000;
 
 const floorCollisions2D = []
-for(let i = 0; i < floorCollisions.length; i += 36){
-    floorCollisions2D.push(floorCollisions.slice(i, i + 36));
+for (let i = 0; i < floorCollisionsVar.length; i += 36) {
+    floorCollisions2D.push(floorCollisionsVar.slice(i, i + 36));
 }
 
 const collisionBlocks = []
 floorCollisions2D.forEach((row, y) => {
     row.forEach((symbol, x) => {
-        if(symbol === 202) {
+        if (symbol === 202) {
             collisionBlocks.push(
                 new CollisionBlock({
-                    position: { 
-                    x: x * 16, 
-                    y: y * 16,
-                },
-            })
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                })
             )
         }
     })
 })
 
-
 const platformCollisions2D = []
-for(let i = 0; i < platformCollisions.length; i += 36){
-    platformCollisions2D.push(platformCollisions.slice(i, i + 36));
+for (let i = 0; i < platformCollisionsVar.length; i += 36) {
+    platformCollisions2D.push(platformCollisionsVar.slice(i, i + 36));
 }
 
 const platformCollisionBlocks = []
 platformCollisions2D.forEach((row, y) => {
     row.forEach((symbol, x) => {
-        if(symbol === 202) {
+        if (symbol === 202) {
             platformCollisionBlocks.push(
                 new CollisionBlock({
-                    position: { 
-                    x: x * 16, 
-                    y: y * 16,
-                },
-                height: 10,
-            })
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                    height: 10,
+                })
             )
         }
     })
@@ -68,8 +180,8 @@ const gravity = 0.2;
 
 const player = new Player({
     position: {
-    x: 100,
-    y: 300,
+        x: 100,
+        y: 300,
     },
     collisionBlocks,
     platformCollisionBlocks,
@@ -124,7 +236,7 @@ const player = new Player({
             frameRate: 2,
             frameBuffer: 10,
             loop: true,
-        },  
+        },
         EnteringDoors: {
             imageSrc: './img/warrior/EnteringDoors.png',
             frameRate: 8,
@@ -133,43 +245,21 @@ const player = new Player({
             onComplete: () => {
                 gsap.to(overlay, {
                     opacity: 1,
+                    onComplete: () => {
+                        level = goToLevel;
+                        levels[level].init();
+                        player.switchSprite('Idle');
+                        player.preventInput = false;
+                        gsap.to(overlay, {
+                            opacity: 0
+                        })
+                    }
                 })
+                return;
             },
-        }, 
+        },
     }
 });
-
-const doors = [
-    new Sprite({
-        position:{
-            x:150,
-            y:372
-        },
-        imageSrc: './img/doorOpen.png', 
-        frameRate: 5,
-        frameBuffer: 2,
-        scale: 0.25,
-        loop: false,
-        autoplay: false,
-        /*
-        animations: {
-            DoorOpen: {
-                imageSrc: './img/doorOpen.png',
-                frameRate: 5,
-                frameBuffer: 2,
-                loop: false,
-            }, 
-            DoorHighlight: {
-                imageSrc: './img/doorHighlight.png',
-                frameRate: 2,
-                frameBuffer: 1,
-                loop: false,
-                autoplay: false,
-            }, 
-        }
-        */
-    })
-]
 
 let isGrounded = false;
 let jumps = 0;
@@ -194,7 +284,7 @@ const keys = {
 }
 
 const minimap = new Sprite({
-    position:{
+    position: {
         x: player.position.x,
         y: player.position.y,
     },
@@ -208,14 +298,6 @@ const minimapCharacter = new Sprite({
     },
     imageSrc: './img/minimapCharacter.png',
     scale: 0.25,
-})
-
-const background = new Sprite({
-    position:{
-        x: 0,
-        y: 0,
-    },
-    imageSrc: './img/background.png',
 })
 
 const camera = {
@@ -242,26 +324,26 @@ function animate() {
     c.scale(4, 4);
     c.translate(camera.position.x, camera.position.y);
 
-    background.update(); 
+    background.update();
 
     doors.forEach((door) => {
         door.draw();
     })
 
-/*
+    /*
 
-        if(collision({
-            object1: player.hitbox,
-            object2: doors[0]
-        })){
-            console.log("Highlight");
-            doors[0].switchSprite('DoorHighlight');
-            return;
-        } else {
-            doors[0].switchSprite('DoorOpen');
-        }
+            if(collision({
+                object1: player.hitbox,
+                object2: doors[0]
+            })){
+                console.log("Highlight");
+                doors[0].switchSprite('DoorHighlight');
+                return;
+            } else {
+                doors[0].switchSprite('DoorOpen');
+            }
 
-*/
+    */
 
     collisionBlocks.forEach(CollisionBlock => {
         CollisionBlock.update();
@@ -275,78 +357,81 @@ function animate() {
 
     player.handleInput(keys);
 
-    if(player.velocity.y < 0) {
-        player.shouldPanCameraToTheDown({canvas, camera});
-        if(player.lastDirection === 'right') 
-        {        
+    if (player.velocity.y < 0) {
+        player.shouldPanCameraToTheDown({
+            canvas,
+            camera
+        });
+        if (player.lastDirection === 'right') {
             player.switchSprite('Jump');
-        }
-        else {
+        } else {
             player.switchSprite('JumpLeft');
+        }
+    } else if (player.velocity.y > 0) {
+        player.shouldPanCameraToTheUp({
+            canvas,
+            camera
+        });
+        if (player.lastDirection === 'right') player.switchSprite('Fall');
+        else player.switchSprite('FallLeft');
     }
-}
-        else if (player.velocity.y > 0) {
-            player.shouldPanCameraToTheUp({canvas, camera});
-            if(player.lastDirection === 'right') player.switchSprite('Fall');
-            else player.switchSprite('FallLeft');
-        }
-        if(keys.mapa.pressed) {
-            minimap.update();
-            minimapCharacter.update();
-        }
+    if (keys.mapa.pressed) {
+        minimap.update();
+        minimapCharacter.update();
+    }
     c.restore();
 
     c.save()
     c.globalAlpha = overlay.opacity;
     c.fillStyle = "black";
-    c.fillRect(0,0,canvas.width, canvas.height);
+    c.fillRect(0, 0, canvas.width, canvas.height);
     c.restore();
 }
-
+levels[level].init();
 animate();
 
 window.addEventListener('keydown', (event) => {
-    if(player.preventInput) return
+    if (player.preventInput) return
     switch (event.key) {
 
         case right:
-            if(keys.mapa.pressed) return
+            if (keys.mapa.pressed) return
             keys.right.pressed = true;
             break;
 
         case left:
-            if(keys.mapa.pressed) return
+            if (keys.mapa.pressed) return
             keys.left.pressed = true;
             break;
 
         case up:
-            if(keys.mapa.pressed) return
-            if(jumps < 2){
-            isGrounded = false;
-            jumps++;
-            player.velocity.y = -5;
+            if (keys.mapa.pressed) return
+            if (jumps < 2) {
+                isGrounded = false;
+                jumps++;
+                player.velocity.y = -5;
             }
             break;
 
         case down:
-            if(keys.mapa.pressed) return
+            if (keys.mapa.pressed) return
             keys.down.pressed = true;
             break;
 
         case mapa:
-            if(keys.left.pressed || keys.down.pressed || keys.right.pressed || player.velocity.y != 0) return
+            if (keys.left.pressed || keys.down.pressed || keys.right.pressed || player.velocity.y != 0) return
             keys.mapa.pressed = !keys.mapa.pressed;
             break;
 
         case use:
-            for(let i = 0; i < doors.length; i++){
+            for (let i = 0; i < doors.length; i++) {
                 const door = doors[i];
-                
-            if(
-                doorCollision({
-                object1: player.hitbox,
-                object2: door,
-            })){
+
+                if (
+                    doorCollision({
+                        object1: player.hitbox,
+                        object2: door,
+                    })) {
                     player.velocity.x = 0;
                     player.velocity.y = 0;
                     player.preventInput = true;
