@@ -58,6 +58,7 @@ class Player extends Sprite {
         this.frameBuffer = this.animations[key].frameBuffer;
         this.frameRate = this.animations[key].frameRate;
         this.loop = this.animations[key].loop;
+        this.currentAnimation = this.animations[key];
     }
 
     updateCamerabox() {

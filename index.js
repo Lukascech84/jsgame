@@ -130,6 +130,11 @@ const player = new Player({
             frameRate: 8,
             frameBuffer: 10,
             loop: false,
+            onComplete: () => {
+                gsap.to(overlay, {
+                    opacity: 1,
+                })
+            },
         }, 
     }
 });
@@ -220,6 +225,10 @@ const camera = {
     },
 }
 
+const overlay = {
+    opacity: 0
+}
+
 function animate() {
 
     setTimeout(() => {
@@ -287,6 +296,11 @@ function animate() {
         }
     c.restore();
 
+    c.save()
+    c.globalAlpha = overlay.opacity;
+    c.fillStyle = "black";
+    c.fillRect(0,0,canvas.width, canvas.height);
+    c.restore();
 }
 
 animate();
