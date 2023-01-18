@@ -31,6 +31,25 @@ class Player extends Sprite {
             height: 10
         }
 
+        this.Attack1Hitbox = {
+            right: {
+            position: {
+                x: this.hitbox.position.x,
+                y: this.hitbox.position.y
+            },
+            width: 40,
+            height: this.hitbox.height
+        },
+            left: {
+                position: {
+                    x: this.hitbox.position.x + this.hitbox.width/1.35,
+                    y: this.hitbox.position.y
+                },
+                width: -40,
+                height: this.hitbox.height
+            }
+            }
+
         this.animations = animations;
         this.lastDirection = 'right';
 
@@ -172,7 +191,6 @@ class Player extends Sprite {
 
     attack(){
         if(isAttacking && (keys.right.pressed || keys.left.pressed) && this.velocity.y === 0){
-            console.log("log");
             this.velocity.x = 0;
             if(this.lastDirection === 'right') this.switchSprite('Attack1');
             else this.switchSprite('Attack1Left');
@@ -181,8 +199,17 @@ class Player extends Sprite {
         }
     }
 
+    attack1HitboxRendering(){
+        if(isAttacking){
+        c.fillStyle = 'rgba(255, 0, 0, 0.25)';
+        if(this.lastDirection === 'right') c.fillRect(this.Attack1Hitbox.right.position.x,this.Attack1Hitbox.right.position.y, this.Attack1Hitbox.right.width, this.Attack1Hitbox.right.height);
+        else c.fillRect(this.Attack1Hitbox.left.position.x,this.Attack1Hitbox.left.position.y, this.Attack1Hitbox.left.width, this.Attack1Hitbox.left.height);
+        }
+    }
+
 
     update() {
+        //this.attack1HitboxRendering();
         this.attack();
         this.minimapCharacterMovement();
         this.minimapMovement();
@@ -210,6 +237,7 @@ class Player extends Sprite {
         this.checkForHorizontalCollisions();
         this.applyGravity();
         this.updateHitbox();
+        this.updateAttack1Hitbox();
         this.checkForVerticalCollisions();
     }
 
@@ -223,6 +251,27 @@ class Player extends Sprite {
             height: 27
         }
     }
+
+    updateAttack1Hitbox() {
+        this.Attack1Hitbox = {
+            right: {
+                position: {
+                    x: this.hitbox.position.x,
+                    y: this.hitbox.position.y
+                },
+                width: 40,
+                height: this.hitbox.height
+            },
+                left: {
+                    position: {
+                        x: this.hitbox.position.x + this.hitbox.width/1.35,
+                        y: this.hitbox.position.y
+                    },
+                    width: -40,
+                    height: this.hitbox.height
+                }
+    }
+}
 
     checkForHorizontalCollisions() {
         for (let i = 0; i < Object.keys(this.collisionBlocks).length; i++) {

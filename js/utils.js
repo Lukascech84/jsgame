@@ -33,3 +33,27 @@ function doorCollision({
         object1.position.x >= object2.position.x
     )
 }
+
+function staticTargetsCollisionRight({
+    a,
+    b,
+}) {
+    return !(
+        ((a.position.y + a.height) < (b.position.y)) ||
+        (a.position.y > (b.position.y + b.height)) ||
+        ((a.position.x + a.width) < b.position.x) ||
+        (a.position.x > (b.position.x + b.width))
+    )
+}
+
+function staticTargetsCollisionLeft({
+    a,
+    b,
+}) {
+    return !(
+        ((a.position.y + a.height) < (b.position.y)) ||
+        (a.position.y > (b.position.y + b.height)) ||
+        ((a.position.x + a.width) > b.position.x) ||
+        (a.position.x < (b.position.x + b.width))
+    )
+}
