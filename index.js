@@ -12,6 +12,7 @@ let platformCollisionsVar = platformCollisionsL1;
 let background;
 let doors;
 let goToLevel;
+let staticTargets;
 
 
 const floorCollisions2D = []
@@ -180,44 +181,67 @@ let levels = {
 
 
             background = new Sprite({
-                position: {
-                    x: 0,
-                    y: 0,
-                },
-                imageSrc: './img/backgroundL1.png',
-            })
-
-            doors = [
-                new Sprite({
                     position: {
-                        x: 150,
-                        y: 372
+                        x: 0,
+                        y: 0,
                     },
-                    imageSrc: './img/doorOpen.png',
-                    frameRate: 5,
-                    frameBuffer: 2,
-                    scale: 0.25,
-                    loop: false,
-                    autoplay: false,
-                    /*
-                    animations: {
-                        DoorOpen: {
-                            imageSrc: './img/doorOpen.png',
-                            frameRate: 5,
-                            frameBuffer: 2,
-                            loop: false,
-                        }, 
-                        DoorHighlight: {
-                            imageSrc: './img/doorHighlight.png',
-                            frameRate: 2,
-                            frameBuffer: 1,
-                            loop: false,
-                            autoplay: false,
-                        }, 
-                    }
-                    */
+                    imageSrc: './img/backgroundL1.png',
+                }),
+
+                doors = [
+                    new Sprite({
+                        position: {
+                            x: 150,
+                            y: 372
+                        },
+                        imageSrc: './img/doorOpen.png',
+                        frameRate: 5,
+                        frameBuffer: 2,
+                        scale: 0.25,
+                        loop: false,
+                        autoplay: false,
+                        /*
+                        animations: {
+                            DoorOpen: {
+                                imageSrc: './img/doorOpen.png',
+                                frameRate: 5,
+                                frameBuffer: 2,
+                                loop: false,
+                            }, 
+                            DoorHighlight: {
+                                imageSrc: './img/doorHighlight.png',
+                                frameRate: 2,
+                                frameBuffer: 1,
+                                loop: false,
+                                autoplay: false,
+                            }, 
+                        }
+                        */
+                    })
+                ]
+
+            staticTargets = [
+                staticTarget1 =
+                new StaticTarget({
+                    position: {
+                        x: 200,
+                        y: 382
+                    },
+                    imageSrc: './img/StaticTarget/DummyRed.png',
+                    scale: 1,
+                }),
+                staticTarget2 =
+                new StaticTarget({
+                    position: {
+                        x: 250,
+                        y: 382
+                    },
+                    imageSrc: './img/StaticTarget/DummyRed.png',
+                    scale: 1,
                 })
             ]
+
+
         }
     },
     2: {
@@ -270,6 +294,18 @@ let levels = {
                     */
                 })
             ]
+
+            staticTargets = [
+                new StaticTarget({
+                    position: {
+                        x: 300,
+                        y: 382
+                    },
+                    imageSrc: './img/StaticTarget/DummyRed.png',
+                    scale: 1,
+                })
+            ]
+
         }
     }
 }
@@ -362,6 +398,11 @@ function animate() {
 
     doors.forEach((door) => {
         door.draw();
+    })
+
+    staticTargets.forEach((targets) => {
+        targets.draw();
+        targets.update();
     })
 
     /*
@@ -498,11 +539,13 @@ window.addEventListener('keyup', (event) => {
 })
 
 window.addEventListener('mousedown', (event) => {
-    if(player.preventInput) return
-    if(player.velocity.y === 0){
-        player.preventInput = true;
-        if(player.lastDirection === 'right') player.switchSprite('Attack1');
-        else player.switchSprite('Attack1Left');
-        isAttacking = true;
-    }
+        if (player.preventInput) return
+        if (player.velocity.y === 0) {
+            player.preventInput = true;
+            if (player.lastDirection === 'right') player.switchSprite('Attack1');
+            else player.switchSprite('Attack1Left');
+            isAttacking = true;
+        }
 })
+
+window.addEventListener("contextmenu", e => e.preventDefault());
