@@ -29,13 +29,13 @@ class StaticTarget {
     }
 
     checkingForHits() {
-        window.addEventListener('mousedown', (event) => {
+        window.addEventListener('mousedown', () => {
             if (
                 staticTargetsCollisionRight({
                     a: player.Attack1Hitbox.right,
                     b: this,
                 }) && player.lastDirection === 'right') {
-                console.log('hitright');
+                //console.log('hitright');
                 setTimeout(() => {
                     this.image.src = './img/StaticTarget/DummyHitted.png';
                 }, 250);
@@ -47,7 +47,7 @@ class StaticTarget {
                     a: player.Attack1Hitbox.left,
                     b: this,
                 }) && player.lastDirection === 'left') {
-                console.log('hitleft');
+                //console.log('hitleft');
                 setTimeout(() => {
                     this.image.src = './img/StaticTarget/DummyHitted.png';
                 }, 250);
@@ -55,7 +55,7 @@ class StaticTarget {
                     this.image.src = './img/StaticTarget/DummyRed.png';
                 }, 500);
                 return;
-            } else console.log('nohit');
+            } //else console.log('nohit');
         })
     }
 }
