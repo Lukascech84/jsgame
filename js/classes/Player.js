@@ -1,3 +1,5 @@
+//Vytvoření classy pro hráče
+
 class Player extends Sprite {
     constructor({
         position,
@@ -14,6 +16,7 @@ class Player extends Sprite {
             frameRate,
             scale
         }); 
+        //Nastavení základních proměnných, statistik, hitboxů, atd... hráče
         this.position = position;
         this.velocity = {
             x: 0,
@@ -69,6 +72,7 @@ class Player extends Sprite {
         }
     }
 
+    //Měnění animací
     switchSprite(key) {
         if (this.image === this.animations[key].image || !this.loaded) return
 
@@ -164,6 +168,7 @@ class Player extends Sprite {
         minimapCharacter.position.y = player.hitbox.position.y / 4 + 17 + Math.abs(camera.position.y);
     }
 
+    //Stará se o vstupy a co s nimi udělat
     handleInput(keys) {
         if (this.preventInput) return
         this.velocity.x = 0;
@@ -189,6 +194,7 @@ class Player extends Sprite {
         }
     }
 
+    //Funkce pro útok
     attack(){
         if(isAttacking && (keys.right.pressed || keys.left.pressed) && this.velocity.y === 0){
             this.velocity.x = 0;
@@ -240,7 +246,7 @@ class Player extends Sprite {
         this.updateAttack1Hitbox();
         this.checkForVerticalCollisions();
     }
-
+    //Updatování hitboxů
     updateHitbox() {
         this.hitbox = {
             position: {
@@ -272,7 +278,7 @@ class Player extends Sprite {
                 }
     }
 }
-
+    //Hlídání horizontálních, vertikálních a platformových kolizí 
     checkForHorizontalCollisions() {
         for (let i = 0; i < Object.keys(this.collisionBlocks).length; i++) {
             const collisionBlock = this.collisionBlocks[i];

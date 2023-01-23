@@ -1,3 +1,5 @@
+//Vytvoření classy pro statický cíl
+
 class StaticTarget {
     constructor({
         position,

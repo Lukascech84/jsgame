@@ -1,3 +1,4 @@
+//Vytvoření classy pro Obrázky
 class Sprite {
     constructor({
         position,

@@ -1,10 +1,12 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
+
+//Nastavení rozlišení
 canvas.width = 1024;
 canvas.height = 576;
 
-
+//Vytvoření proměnných které se v určitých levelech mění
 let floorCollisionsVar = floorCollisionsL1;
 let platformCollisionsVar = platformCollisionsL1;
 
@@ -13,50 +15,6 @@ let background;
 let doors;
 let goToLevel;
 let staticTargets;
-
-
-const floorCollisions2D = []
-for (let i = 0; i < floorCollisionsVar.length; i += 36) {
-    floorCollisions2D.push(floorCollisionsVar.slice(i, i + 36));
-}
-
-const collisionBlocks = []
-floorCollisions2D.forEach((row, y) => {
-    row.forEach((symbol, x) => {
-        if (symbol === 202) {
-            collisionBlocks.push(
-                new CollisionBlock({
-                    position: {
-                        x: x * 16,
-                        y: y * 16,
-                    },
-                })
-            )
-        }
-    })
-})
-
-const platformCollisions2D = []
-for (let i = 0; i < platformCollisionsVar.length; i += 36) {
-    platformCollisions2D.push(platformCollisionsVar.slice(i, i + 36));
-}
-
-const platformCollisionBlocks = []
-platformCollisions2D.forEach((row, y) => {
-    row.forEach((symbol, x) => {
-        if (symbol === 202) {
-            platformCollisionBlocks.push(
-                new CollisionBlock({
-                    position: {
-                        x: x * 16,
-                        y: y * 16,
-                    },
-                    height: 10,
-                })
-            )
-        }
-    })
-})
 
 
 const player = new Player({
@@ -165,11 +123,13 @@ const player = new Player({
 });
 
 
-
+//Nastavení proměnnou s levely
 let level = 1;
 let levels = {
     1: {
         init: () => {
+            console.log('Level 1');
+            console.log(floorCollisionsL1);
             floorCollisionsVar = floorCollisionsL1;
             platformCollisionsVar = platformCollisionsL1;
             player.collisionBlocks = collisionBlocks;
@@ -246,6 +206,8 @@ let levels = {
     },
     2: {
         init: () => {
+            console.log('Level 2');
+            console.log(floorCollisionsL2);
             floorCollisionsVar = floorCollisionsL2;
             platformCollisionsVar = platformCollisionsL2;
             player.collisionBlocks = collisionBlocks;
@@ -315,7 +277,7 @@ const scaledCanvas = {
     height: canvas.height / 4
 }
 
-
+//Nastavení ovládání
 const left = 'a';
 const right = 'd';
 const down = 's';
@@ -381,12 +343,61 @@ const overlay = {
     opacity: 0
 }
 
+
+//Rozřezání pole s kolizemi do řádků
+let floorCollisions2D = []
+for (let i = 0; i < floorCollisionsVar.length; i += 36) {
+    floorCollisions2D.push(floorCollisionsVar.slice(i, i + 36));
+}
+
+//Vytvoření bloků kolizí na daných souřadnicích
+let collisionBlocks = []
+floorCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if (symbol === 202) {
+            collisionBlocks.push(
+                new CollisionBlock({
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                })
+            )
+        }
+    })
+})
+
+let platformCollisions2D = []
+for (let i = 0; i < platformCollisionsVar.length; i += 36) {
+    platformCollisions2D.push(platformCollisionsVar.slice(i, i + 36));
+}
+
+let platformCollisionBlocks = []
+platformCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if (symbol === 202) {
+            platformCollisionBlocks.push(
+                new CollisionBlock({
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                    height: 10,
+                })
+            )
+        }
+    })
+})
+
+
+
 function animate() {
 
     setTimeout(() => {
         requestAnimationFrame(animate);
     }, 1000 / fps);
 
+    //Vykreslení všeho
     c.fillStyle = 'white';
     c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -431,7 +442,7 @@ function animate() {
     player.update();
 
     player.handleInput(keys);
-
+//Animace skákání a padání
     if (player.velocity.y < 0) {
         player.shouldPanCameraToTheDown({
             canvas,
@@ -462,9 +473,11 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height);
     c.restore();
 }
+//Vykreslení daného levelu
 levels[level].init();
 animate();
 
+//Checkování pro stisknutí kláves
 window.addEventListener('keydown', (event) => {
     if (player.preventInput) return
     switch (event.key) {
@@ -519,6 +532,7 @@ window.addEventListener('keydown', (event) => {
     }
 })
 
+
 window.addEventListener('keyup', (event) => {
     switch (event.key) {
 
@@ -537,7 +551,7 @@ window.addEventListener('keyup', (event) => {
 
 
 })
-
+//Checkování myši
 window.addEventListener('mousedown', (event) => {
         if (player.preventInput) return
         if (player.velocity.y === 0) {
@@ -547,5 +561,5 @@ window.addEventListener('mousedown', (event) => {
             isAttacking = true;
         }
 })
-
+//Vypnutí pravého tlačítka
 window.addEventListener("contextmenu", e => e.preventDefault());

@@ -1,3 +1,4 @@
+//Vytvoření classy pro Bloky kolizí
 class CollisionBlock {
     constructor({position, height = 16}) {
         this.position = position;
@@ -6,10 +7,10 @@ class CollisionBlock {
     }
 
     draw() {
-/*
+
         c.fillStyle = 'rgba(255, 0, 0, 0.5)';
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
-*/
+        
     }
 
     update() {

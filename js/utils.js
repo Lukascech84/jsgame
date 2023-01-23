@@ -1,3 +1,5 @@
+//Soubor s různými podmínkami použitými v kódu
+
 function collision({
     object1,
     object2
