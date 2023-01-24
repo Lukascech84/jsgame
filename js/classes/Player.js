@@ -90,8 +90,8 @@ class Player extends Sprite {
                 x: this.position.x - this.camerabox.width / 3 + this.hitbox.width / 2,
                 y: this.position.y - this.hitbox.height / 2,
             },
-            width: 220,
-            height: 120,
+            width: canvas.width/5,
+            height: canvas.height/5,
         }
     }
 
