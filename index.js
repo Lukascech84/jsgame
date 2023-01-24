@@ -3,8 +3,8 @@ const c = canvas.getContext('2d');
 
 
 //Nastavení rozlišení
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = 1600;
+canvas.height = 900;
 
 //Vytvoření proměnných které se v určitých levelech mění
 let floorCollisionsVar = floorCollisionsL1;
