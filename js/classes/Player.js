@@ -224,7 +224,7 @@ class Player extends Sprite {
         this.updateFrames();
         this.updateHitbox();
         this.updateCamerabox();
-        /*
+       
                 //Camerabox
                 c.fillStyle = 'rgba(0, 0, 255, 0.25)';
                 c.fillRect(this.camerabox.position.x,this.camerabox.position.y, this.camerabox.width, this.camerabox.height);
@@ -234,7 +234,7 @@ class Player extends Sprite {
                 //Hitbox
                 c.fillStyle = 'rgba(255, 0, 0, 0.25)';
                 c.fillRect(this.hitbox.position.x,this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
-        */
+        
 
         this.draw();
 
